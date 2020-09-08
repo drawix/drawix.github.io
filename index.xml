@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jakub&#39;s Blog</title>
+    <link>https://drawix.github.io/</link>
+    <description>Recent content on Jakub&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 08 Sep 2020 12:16:58 +0200</lastBuildDate>
+    
+	<atom:link href="https://drawix.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>my STM32 setup, using VIM as IDE</title>
+      <link>https://drawix.github.io/post/setting-up-stm32-in-vim/</link>
+      <pubDate>Tue, 08 Sep 2020 12:16:58 +0200</pubDate>
+      
+      <guid>https://drawix.github.io/post/setting-up-stm32-in-vim/</guid>
+      <description>Introduction So, recently I got my hands on Nucleo-L073RZ board.
+I&amp;rsquo;m used to my lovely nvim, with completion provied by Coc plugin and nerdtree as internal file manager. I don&amp;rsquo;t want to trade it for other IDE, like STM32CubeIDE which is more suitable for that kind of development, but would require me to change my habits. After poking around for diffrent ways of compiling and sending product to board I found projects like:</description>
+    </item>
+    
+  </channel>
+</rss>

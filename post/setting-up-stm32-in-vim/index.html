@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>my STM32 setup, using VIM as IDE - Jakub&#39;s Blog</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Jakub Zyska" /><meta name="description" content="Introduction So, recently I got my hands on Nucleo-L073RZ board.
+I&amp;rsquo;m used to my lovely nvim, with completion provied by Coc plugin and nerdtree as internal file manager. I don&amp;rsquo;t want to trade it for other IDE, like STM32CubeIDE which is more suitable for that kind of development, but would require me to change my habits. After poking around for diffrent ways of compiling and sending product to board I found projects like:" /><meta name="keywords" content="Hugo, theme, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.74.3 with theme even" />
+
+
+<link rel="canonical" href="https://drawix.github.io/post/setting-up-stm32-in-vim/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.651e6917abb0239242daa570c2bec9867267bbcd83646da5a850afe573347b44.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="my STM32 setup, using VIM as IDE" />
+<meta property="og:description" content="Introduction So, recently I got my hands on Nucleo-L073RZ board.
+I&rsquo;m used to my lovely nvim, with completion provied by Coc plugin and nerdtree as internal file manager. I don&rsquo;t want to trade it for other IDE, like STM32CubeIDE which is more suitable for that kind of development, but would require me to change my habits. After poking around for diffrent ways of compiling and sending product to board I found projects like:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://drawix.github.io/post/setting-up-stm32-in-vim/" />
+<meta property="article:published_time" content="2020-09-08T12:16:58+02:00" />
+<meta property="article:modified_time" content="2020-09-08T12:16:58+02:00" />
+<meta itemprop="name" content="my STM32 setup, using VIM as IDE">
+<meta itemprop="description" content="Introduction So, recently I got my hands on Nucleo-L073RZ board.
+I&rsquo;m used to my lovely nvim, with completion provied by Coc plugin and nerdtree as internal file manager. I don&rsquo;t want to trade it for other IDE, like STM32CubeIDE which is more suitable for that kind of development, but would require me to change my habits. After poking around for diffrent ways of compiling and sending product to board I found projects like:">
+<meta itemprop="datePublished" content="2020-09-08T12:16:58+02:00" />
+<meta itemprop="dateModified" content="2020-09-08T12:16:58+02:00" />
+<meta itemprop="wordCount" content="867">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="my STM32 setup, using VIM as IDE"/>
+<meta name="twitter:description" content="Introduction So, recently I got my hands on Nucleo-L073RZ board.
+I&rsquo;m used to my lovely nvim, with completion provied by Coc plugin and nerdtree as internal file manager. I don&rsquo;t want to trade it for other IDE, like STM32CubeIDE which is more suitable for that kind of development, but would require me to change my habits. After poking around for diffrent ways of compiling and sending product to board I found projects like:"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Even</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Even</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">my STM32 setup, using VIM as IDE</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-09-08 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Contents</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a>
+      <ul>
+        <li><a href="#installing-and-your-first-project">Installing and your first project</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="introduction">Introduction</h1>
+<p>So, recently I got my hands on Nucleo-L073RZ board.</p>
+<p>I&rsquo;m used to my lovely nvim, with completion provied by Coc plugin and nerdtree as internal file manager. <br> I don&rsquo;t want to trade it for other IDE, like STM32CubeIDE which is more suitable for that kind of development, but would require me to change my habits. <br>
+After poking around for diffrent ways of compiling and sending product to board I found projects like:</p>
+<center>
+https://github.com/JihedChaibi/STM32-with-no-IDE
+</center>
+<p>and played with it for couple of days, but using diffrent drivers than included was pain in the arse for beginner. <br>
+After giving up the bare-bones solutions I found out about PlatformIO which is essentialy all-in-one solution for project deploying. <br>
+They offer PlatformIO as plugin for Visual Studio Code and Atom called IDE, there&rsquo;s also Core version of it. <br>
+I went with a Core version, which consist every PlatformIO feature without messing with code editor. <br></p>
+<h2 id="installing-and-your-first-project">Installing and your first project</h2>
+<p>You can install PlatformIO using AUR, it&rsquo;s <em>platformio</em> package. <br>
+We will need clangd, bear (AUR package) and three vim plugins:</p>
+<center>
+https://www.github.com/neoclide/coc.nvim <br>
+https://www.github.com/neomake/neomake <br>
+https://www.github.com/w0rp/ale <br>
+</center>
+<p>After that, go to empty directory and use</p>
+<center>
+platformio project init --ide vim --board <ID>
+</center> <br>
+<p>Board ID can be found using <code>platformio boards</code> , also you can specify search adding fe. &ldquo;nucleo&rdquo; which give you following result:<br></p>
+<p><img src="/static/platformio_boards.png" alt="nucleoboardslisting"></p>
+<p>Naturally I&rsquo;m choosing nucleo_l073rz.</p>
+<p>After project is done deploying create <code>Makefile</code> file</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-makefile" data-lang="makefile"><span class="c"># Uncomment lines below if you have problems with $PATH
+</span><span class="c">#SHELL := /bin/bash
+</span><span class="c">#PATH := /usr/local/bin:$(PATH)
+</span><span class="c"></span>
+<span class="nf">all</span><span class="o">:</span>
+				platformio run
+
+<span class="nf">upload</span><span class="o">:</span>
+				platformio run --target upload
+
+<span class="nf">clean</span><span class="o">:</span>
+				platformio run --target clean
+
+<span class="nf">program</span><span class="o">:</span>
+				platformio run --target program
+
+<span class="nf">uploadfs</span><span class="o">:</span>
+				platformio run --target uploadfs
+
+<span class="nf">update</span><span class="o">:</span>
+				platformio update
+</code></pre></td></tr></table>
+</div>
+</div><p>Configure Coc to nicely work with clangd using <code>:CocConfig</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&#34;languageserver&#34;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&#34;clangd&#34;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&#34;command&#34;</span><span class="p">:</span> <span class="s2">&#34;clangd&#34;</span><span class="p">,</span>
+      <span class="nt">&#34;args&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;--background-index&#34;</span><span class="p">],</span>
+      <span class="nt">&#34;rootPatterns&#34;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&#34;compile_flags.txt&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;compile_commands.json&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;.vim/&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;.git/&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;.hg/&#34;</span>
+      <span class="p">],</span>
+      <span class="nt">&#34;filetypes&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;c&#34;</span><span class="p">,</span> <span class="s2">&#34;cpp&#34;</span><span class="p">,</span> <span class="s2">&#34;objc&#34;</span><span class="p">,</span> <span class="s2">&#34;objcpp&#34;</span><span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nt">&#34;diagnostic.displayByAle&#34;</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Also take care of ALE settings in &lsquo;init.rc&rsquo;</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-viml" data-lang="viml"><span class="k">let</span> <span class="nx">g</span>:<span class="nx">ale_linters</span> <span class="p">=</span> { <span class="s1">&#39;cpp&#39;</span>: [<span class="s1">&#39;clangd&#39;</span>] }<span class="err">
+</span><span class="err"></span><span class="k">let</span> <span class="nx">g</span>:<span class="nx">ale_fixers</span> <span class="p">=</span> { <span class="s1">&#39;cpp&#39;</span>: [ <span class="s1">&#39;clang-format&#39;</span> ] }<span class="err">
+</span></code></pre></td></tr></table>
+</div>
+</div><p>In the end we need to create file called <code>compile_commands.json</code> that include information necessary for clang, for that we need Bear.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">make clean
+bear make all
+</code></pre></td></tr></table>
+</div>
+</div><p>Rememeber to recreate <code>compile_commands.json</code> after changes. <br></p>
+<p>PlatformIO doesn&rsquo;t create main.c file, which should be in src/ folder.
+Also remember to check platformio.ini file; for me it was set for Arduino framework, but I will be using CMSIS.</p>
+<p>Now we can see the product of our work :)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">[jakub@archlinux ~/projekty/kod/1]$ make
+platformio run
+Processing nucleo_l073rz (platform: ststm32; board: nucleo_l073rz; framework: cmsis)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/ststm32/nucleo_l073rz.html
+PLATFORM: ST STM32 (8.0.0) &gt; ST Nucleo L073RZ
+HARDWARE: STM32L073RZ 32MHz, 20KB RAM, 192KB Flash
+DEBUG: Current (stlink) On-board (stlink) External (blackmagic, jlink)
+PACKAGES:
+ - framework-cmsis 2.50501.200527 (5.5.1)
+ - framework-cmsis-stm32l0 1.9.0
+ - tool-ldscripts-ststm32 0.1.0
+ - toolchain-gccarmnoneeabi 1.70201.0 (7.2.1)
+LDF: Library Dependency Finder -&gt; http://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 0 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Checking size .pio/build/nucleo_l073rz/firmware.elf
+Advanced Memory Usage is available via &#34;PlatformIO Home &gt; Project Inspect&#34;
+RAM:   [          ]   0.1% (used 28 bytes from 20480 bytes)
+Flash: [          ]   0.2% (used 348 bytes from 196608 bytes)
+=============================================================================================== [SUCCESS] Took 0.30 seconds ===================================================================================================
+
+[jakub@archlinux ~/projekty/kod/1]$ make upload
+platformio run --target upload
+Processing nucleo_l073rz (platform: ststm32; board: nucleo_l073rz; framework: cmsis)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/ststm32/nucleo_l073rz.html
+PLATFORM: ST STM32 (8.0.0) &gt; ST Nucleo L073RZ
+HARDWARE: STM32L073RZ 32MHz, 20KB RAM, 192KB Flash
+DEBUG: Current (stlink) On-board (stlink) External (blackmagic, jlink)
+PACKAGES:
+ - framework-cmsis 2.50501.200527 (5.5.1)
+ - framework-cmsis-stm32l0 1.9.0
+ - tool-dfuutil 1.9.200310
+ - tool-ldscripts-ststm32 0.1.0
+ - tool-openocd 2.1000.200630 (10.0)
+ - tool-stm32duino 1.0.1
+ - toolchain-gccarmnoneeabi 1.70201.0 (7.2.1)
+LDF: Library Dependency Finder -&gt; http://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 0 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Checking size .pio/build/nucleo_l073rz/firmware.elf
+Advanced Memory Usage is available via &#34;PlatformIO Home &gt; Project Inspect&#34;
+RAM:   [          ]   0.1% (used 28 bytes from 20480 bytes)
+Flash: [          ]   0.2% (used 348 bytes from 196608 bytes)
+Configuring upload protocol...
+AVAILABLE: blackmagic, jlink, mbed, stlink
+CURRENT: upload_protocol = stlink
+Uploading .pio/build/nucleo_l073rz/firmware.elf
+xPack OpenOCD, x86_64 Open On-Chip Debugger 0.10.0+dev-00378-ge5be992df (2020-06-26-09:27)
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+debug_level: 1
+
+srst_only separate srst_nogate srst_open_drain connect_deassert_srst
+
+target halted due to debug-request, current mode: Thread
+xPSR: 0xf1000000 pc: 0x08000108 msp: 0x20005000
+STM32L0: Enabling HSI16
+** Programming Started **
+** Programming Finished **
+** Verify Started **
+** Verified OK **
+** Resetting Target **
+shutdown command invoked
+=================================================================================================== [SUCCESS] Took 1.18 seconds ===============================================================================================
+
+</code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">Author</span>
+    <span class="item-content">Jakub Zyska</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">LastMod</span>
+    <span class="item-content">
+        2020-09-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:drawixpl@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="http://github.com/drawix" class="iconfont icon-github" title="github"></a>
+  <a href="https://drawix.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2017 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Jakub Zyska</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.d7b7ada643c9c1a983026e177f141f7363b4640d619caf01d8831a6718cd44ea.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
